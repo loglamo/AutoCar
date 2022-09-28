@@ -1,0 +1,74 @@
+void CImageProcessingDoc::OnProcessMosaic()
+{
+	// TODO: Add a mosaic code here
+	if (m_pImage) {
+		DlgMosaicOption dlg;
+
+		if (dlg.DoModal() == IDOK) {
+			// write your own code
+			// for applying your effect, you must use m_pImage
+			// this code is a simple example for manufacturing image : grayscaling
+			DWORD width = m_pImage->GetWidth();
+			DWORD height = m_pImage->GetHeight();
+			RGBQUAD color;
+			RGBQUAD newcolor;
+			DWORD raw_image_red[500][500];
+			DWORD raw_image_green[500][500];
+			DWORD raw_image_blue[500][500];
+			//define masks for blurring
+			float blurring_mask[3][3] = { {1 / 9,1 / 9,1 / 9},{1 / 9,1 / 9,1 / 9},{1 / 9,1 / 9,1 / 9} };
+			//define mask for sharpening
+			float sharpening_mask[3][3] = { {0, -1, 0}, {-1, 5, -1}, {0, -1, 0} };
+			//store the raw image into matrix
+			for (DWORD y = 0; y < height; y++) {
+				for (DWORD x = 0; x < width; x++) {
+					color = m_pImage->GetPixelColor(x, y);
+					byte red_color = color.rgbRed;
+					byte green_color = color.rgbGreen;
+					byte blue_color = color.rgbBlue;
+					raw_image_red[y][x] = red_color;
+					raw_image_green[y][x] = green_color;
+					raw_image_blue[y][x] = blue_color;
+				}
+			}
+
+			//execute bluring and sharpening
+			DWORD dwWindowSize = dlg.m_dwWindowSize;
+			if (dwWindowSize == 0) {//blurring
+				for (DWORD y = 1; y < height - 1; y++) {
+					for (DWORD x = 1; x < width - 1; x++) {
+						byte red_valuexy;
+						byte green_valuexy;
+						byte blue_valuexy;
+						red_valuexy = raw_image_red[y-1][x-1]*blurring_mask[0][0] + raw_image_red[y-1][x]*blurring_mask[0][1] + raw_image_red[y-1][x+1]*blurring_mask[0][2] + raw_image_red[y][x-1]*blurring_mask[1][0] + raw_image_red[y][x]*blurring_mask[1][1] + raw_image_red[y][x+1]*blurring_mask[1][2] + raw_image_red[y+1][x-1]*blurring_mask[2][0] + raw_image_red[y+1][x]*blurring_mask[2][1] + raw_image_red[y+1][x+1]*blurring_mask[2][2];
+
+					}
+				}
+
+
+			}
+			else if (dwWindowSize == 1) {//sharpening
+
+			}
+
+
+
+
+
+			for (DWORD y = 0; y < height; y++) {
+				for (DWORD x = 0; x < width; x++) {
+					color = m_pImage->GetPixelColor(x, y);
+					byte red_color = color.rgbRed;
+					raw_image_red[y][x] = red_color;
+					//newcolor.rgbBlue  = (BYTE)RGB2GRAY(color.rgbRed, color.rgbGreen, color.rgbBlue);
+					//newcolor.rgbGreen = (BYTE)RGB2GRAY(color.rgbRed, color.rgbGreen, color.rgbBlue);
+					//newcolor.rgbRed   = (BYTE)RGB2GRAY(color.rgbRed, color.rgbGreen, color.rgbBlue);
+					// m_pImage->SetPixelColor(x, y, newcolor);
+				}
+			}
+		}
+	}
+
+				CalculateHistogram();
+				UpdateAllViews(NULL);
+			}
